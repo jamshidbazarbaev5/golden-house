@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/commercial", label: "Коммерция" },
   { href: "/mortgage", label: "Ипотека" },
   { href: "/company", label: "О компании" },
+  { href: "/presentation", label: "Презентация" },
   { href: "/vacancies", label: "Вакансии" },
   { href: "/news", label: "Новости" },
   { href: "/events", label: "Акции" },
