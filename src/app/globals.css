@@ -82,6 +82,35 @@ body {
   transition: all 0.3s;
 }
 .header__nav-link:hover { color: var(--gold); background: rgba(200,168,85,0.08); }
+.header__nav-link--btn {
+  background: none; border: none; cursor: pointer; font: inherit;
+  display: inline-flex; align-items: center;
+}
+.header__nav-item { position: relative; }
+.header__nav-item--dropdown:hover .header__dropdown,
+.header__nav-item--dropdown:focus-within .header__dropdown {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.header__dropdown {
+  position: absolute; top: 100%; left: 0;
+  min-width: 280px; max-width: 360px;
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  padding: 8px; margin-top: 4px;
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: all 0.2s ease;
+  z-index: 50;
+}
+.header__dropdown-link {
+  display: block; padding: 10px 14px; color: #1a1f36;
+  text-decoration: none; font-size: 14px; border-radius: 6px;
+  transition: all 0.2s;
+}
+.header__dropdown-link:hover { color: var(--gold); background: rgba(200,168,85,0.08); }
+.header__logo-icon--img {
+  background: transparent; padding: 0; overflow: hidden;
+}
+.header__logo-icon--img img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
 .header__right { display: flex; align-items: center; gap: 16px; }
 .header__phone {
   display: flex; align-items: center; gap: 8px;
@@ -135,6 +164,23 @@ body {
   transition: all 0.3s;
 }
 .mobile-overlay__link:hover { color: var(--gold); background: rgba(255,255,255,0.05); }
+.mobile-overlay__link--btn {
+  width: 100%; background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  font: inherit; text-align: left;
+}
+.mobile-overlay__group { margin-bottom: 4px; }
+.mobile-overlay__sublist {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 4px 0 8px 12px; border-left: 1px solid rgba(255,255,255,0.1);
+  margin-left: 16px;
+}
+.mobile-overlay__sublink {
+  display: block; color: rgba(255,255,255,0.7); text-decoration: none;
+  font-size: 14px; padding: 8px 14px; border-radius: 6px;
+  transition: all 0.2s;
+}
+.mobile-overlay__sublink:hover { color: var(--gold); background: rgba(255,255,255,0.05); }
 .mobile-overlay__bottom {
   margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);
 }
