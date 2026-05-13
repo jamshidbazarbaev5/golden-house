@@ -11,7 +11,7 @@ type MenuItem = {
   children?: MenuItem[];
 };
 
-const MENU_BASE = "/Меню";
+const MENU_BASE = "/docs";
 
 const menu: MenuItem[] = [
   {
@@ -23,7 +23,7 @@ const menu: MenuItem[] = [
       },
       {
         label: "Ёшлар ижтимоий-иқтисодий маркази ҳақида",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ёшлар ижтимоий-иқтисодий маркази ҳақида+/Ёшлар маркази ҳақида.doc`,
+        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ёшлар ижтимоий-иқтисодий маркази ҳақида+/Ёшлар маркази ҳақида.docx`,
       },
       {
         label: "Раҳбарият",
@@ -31,14 +31,11 @@ const menu: MenuItem[] = [
       },
       {
         label: "Ташкилот тузилмаси",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ташкилот тузилмаси+/ТУЗИЛМА.doc`,
+        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ташкилот тузилмаси+/ТУЗИЛМА.docx`,
       },
     ],
   },
-  {
-    label: "Лойиҳалар",
-    href: "/projects",
-  },
+  
   {
     label: "Инвесторлар учун",
     children: [
@@ -89,7 +86,7 @@ const encodeHref = (href?: string) => {
 };
 
 const isExternalFile = (href?: string) =>
-  !!href && (href.includes(".docx") || href.includes(".doc") || href.includes(".pdf"));
+  !!href && href.startsWith("/Меню");
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -125,7 +122,7 @@ export default function Header() {
         <div className="header__inner">
           <Link href="/" className="header__logo">
             <div className="header__logo-icon header__logo-icon--img">
-              <Image src="/gerb.jpeg" alt="Yoshlar Markazi" width={40} height={40} />
+              <Image src="/gerb.jpeg" alt="Yoshlar Markazi" width={40} height={40} style={{ width: "auto", height: "100%" }} />
             </div>
             <div>
               <div className="header__logo-text">YOSHLAR MARKAZI</div>

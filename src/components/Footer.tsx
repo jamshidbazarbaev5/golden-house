@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 
-const MENU_BASE = "/Меню";
+const MENU_BASE = "/docs";
 
 type FooterLink = { label: string; href: string; external?: boolean };
 
@@ -13,22 +13,18 @@ const sections: { title: string; links: FooterLink[] }[] = [
       {
         label: "Вазифа ва функциялар",
         href: `${MENU_BASE}/1. Дирекция ҳақида+/Вазифа ва функциялар+/Вазифа ва функциялар.docx`,
-        external: true,
       },
       {
         label: "Ёшлар маркази ҳақида",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ёшлар ижтимоий-иқтисодий маркази ҳақида+/Ёшлар маркази ҳақида.doc`,
-        external: true,
+        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ёшлар ижтимоий-иқтисодий маркази ҳақида+/Ёшлар маркази ҳақида.docx`,
       },
       {
         label: "Раҳбарият",
         href: `${MENU_BASE}/1. Дирекция ҳақида+/Раҳбарият+/Раҳбарият.docx`,
-        external: true,
       },
       {
         label: "Ташкилот тузилмаси",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ташкилот тузилмаси+/ТУЗИЛМА.doc`,
-        external: true,
+        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ташкилот тузилмаси+/ТУЗИЛМА.docx`,
       },
     ],
   },
@@ -38,12 +34,10 @@ const sections: { title: string; links: FooterLink[] }[] = [
       {
         label: "Қабул қилинган ҳужжатлар",
         href: `${MENU_BASE}/3. Инвсеторлар учун/қабул қилинган ҳужжатлар+/ПҚ-332.pdf`,
-        external: true,
       },
       {
         label: "Талаб ва мажбуриятлар",
         href: `${MENU_BASE}/3. Инвсеторлар учун/Талаб ва мажбуриятлар+/Критерия договор.docx`,
-        external: true,
       },
       { label: "Ер участкалари", href: "#" },
       { label: "Инвестицион лойиҳалар", href: "#" },
@@ -55,17 +49,14 @@ const sections: { title: string; links: FooterLink[] }[] = [
       {
         label: "Яратилган имтиёзлар",
         href: `${MENU_BASE}/4. Яратилган имтиёзлар+/ҚР имтиёзлар рўйхати +.docx`,
-        external: true,
       },
       {
         label: "Тендерлар",
         href: `${MENU_BASE}/5. Очиқ маълумотлар+/Тендерлар/Тендер.docx`,
-        external: true,
       },
       {
         label: "Боғланиш",
         href: `${MENU_BASE}/6. Боғланиш+/Боғланиш учун телефон рақамлари.docx`,
-        external: true,
       },
       { label: "Мурожаат", href: "#" },
     ],
@@ -89,7 +80,7 @@ export default function Footer() {
         <div>
           <div className="footer__brand-logo">
             <div className="header__logo-icon header__logo-icon--img">
-              <Image src="/gerb.jpeg" alt="Yoshlar Markazi" width={44} height={44} />
+              <Image src="/gerb.jpeg" alt="Yoshlar Markazi" width={44} height={44} style={{ width: "auto", height: "100%" }} />
             </div>
             <div>
               <div className="header__logo-text">YOSHLAR MARKAZI</div>
