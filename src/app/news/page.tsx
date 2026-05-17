@@ -1,47 +1,67 @@
 import Link from "next/link";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ArrowUpRight } from "lucide-react";
+import { getAllNews } from "@/data/newsData";
+import "../styles/news.css";
+import type { Metadata } from "next";
 
-const newsItems = [
-  { id: 1, title: "Передача ключей дольщикам ЖК O'z Mahal", excerpt: "Во флагманском проекте Golden House состоялась торжественная передача ключей новым жильцам комплекса O'z Mahal.", date: "20 октября 2024", bg: "linear-gradient(135deg, #2563eb, #4f46e5)" },
-  { id: 2, title: "Осенняя ярмарка недвижимости Golden House", excerpt: "Махаллада дув-дув гап! Приглашаем на осеннюю ярмарку с самыми выгодными предложениями на рынке недвижимости.", date: "5 октября 2024", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-  { id: 3, title: "Golden House открывает новый офис продаж", excerpt: "Теперь нас удобно посетить в бизнес-центре Infinity. Новый офис оборудован по последнему слову техники.", date: "15 сентября 2024", bg: "linear-gradient(135deg, #059669, #0d9488)" },
-  { id: 4, title: "Старт продаж в ЖК Assalom Havo", excerpt: "Начинаются продажи квартир в новом жилом комплексе Assalom Havo. Специальные условия для первых покупателей.", date: "1 сентября 2024", bg: "linear-gradient(135deg, #7c3aed, #8b5cf6)" },
-  { id: 5, title: "Golden House на выставке недвижимости 2024", excerpt: "Компания Golden House приняла участие в крупнейшей выставке недвижимости Узбекистана. Итоги и результаты.", date: "20 августа 2024", bg: "linear-gradient(135deg, #d97706, #ea580c)" },
-  { id: 6, title: "Обновление инфраструктуры ЖК Assalom Jomiy", excerpt: "Завершены работы по благоустройству территории и обновлению инфраструктуры жилого комплекса.", date: "10 августа 2024", bg: "linear-gradient(135deg, #e11d48, #ec4899)" },
-];
+export const metadata: Metadata = {
+  title: "Yoshlar markazi — Yangiliklar",
+  description: "Yoshlar hayoti, ta'lim, madaniyat va tadbirkorlikdan eng so'nggi yangiliklar.",
+};
 
 export default function NewsPage() {
-  return (
-    <>
-      <section className="page-hero">
-        <div className="page-hero__inner">
-          <span className="page-hero__label">Новости</span>
-          <h1 className="page-hero__title">Новости компании</h1>
-          <p className="page-hero__desc">Последние события и обновления из мира Golden House</p>
-        </div>
-      </section>
+  const news = getAllNews();
+  const [featured, ...rest] = news;
 
-      <section className="section section--gray">
-        <div className="section__inner">
-          <div className="grid-3">
-            {newsItems.map((item) => (
-              <Link key={item.id} href={`/news/${item.id}`} className="page-news-card">
-                <div className="page-news-card__image" style={{ background: item.bg }}>
-                  <div className="page-news-card__image-circle1" />
-                  <div className="page-news-card__image-circle2" />
-                  <span className="page-news-card__badge">Новости</span>
-                </div>
-                <div className="page-news-card__body">
-                  <div className="page-news-card__date"><Calendar /> {item.date}</div>
-                  <h3 className="page-news-card__title">{item.title}</h3>
-                  <p className="page-news-card__excerpt">{item.excerpt}</p>
-                  <div className="page-news-card__more">Читать далее <ArrowRight /></div>
-                </div>
-              </Link>
-            ))}
+  return (
+    <main className="page">
+      <header className="index-header">
+        <p className="eyebrow">Yoshlar markazi · Yangiliklar</p>
+        <h1 className="index-title">
+          Bugun nima <em>sodir bo'lmoqda</em>.
+        </h1>
+      </header>
+
+      <section className="index-section">
+        <Link
+          href={`/news/${featured.id}`}
+          className="featured"
+        >
+          <div className="featured-img-wrap">
+            <img src={featured.image} alt={featured.title} className="featured-img" />
           </div>
+          <div className="featured-body">
+            <span className="category">{featured.category}</span>
+            <h2 className="featured-title">{featured.title}</h2>
+            <p className="featured-excerpt">{featured.excerpt}</p>
+            <span className="read-more">
+              Davomini o'qish <ArrowUpRight size={16} />
+            </span>
+          </div>
+        </Link>
+
+        <div className="grid">
+          {rest.map((item) => (
+            <Link
+              key={item.id}
+              href={`/news/${item.id}`}
+              className="card"
+            >
+              <div className="card-img-wrap">
+                <img src={item.image} alt={item.title} className="card-img" />
+              </div>
+              <div className="card-meta">
+                <span className="category">{item.category}</span>
+                <span>·</span>
+                <span className="meta-date">
+                  <Calendar size={12} /> {item.date}
+                </span>
+              </div>
+              <h3 className="card-title">{item.title}</h3>
+            </Link>
+          ))}
         </div>
       </section>
-    </>
+    </main>
   );
 }

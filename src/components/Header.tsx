@@ -69,6 +69,10 @@ const menu: MenuItem[] = [
     href: `${MENU_BASE}/6. Боғланиш+/Боғланиш учун телефон рақамлари.docx`,
   },
   {
+    label: "Янгиликлар",
+    href: "/news",
+  },
+  {
     label: "Мурожаат",
     href: "#",
   },
@@ -83,6 +87,15 @@ const encodeHref = (href?: string) => {
       .join("/");
   }
   return href;
+};
+
+const isPdfFile = (href?: string) =>
+  !!href && href.toLowerCase().endsWith(".pdf");
+
+const convertToDownloadUrl = (href?: string): string => {
+  if (!href || !href.startsWith("/docs/")) return href || "#";
+  // Convert /docs/... to /api/download/...
+  return href.replace("/docs/", "/api/download/");
 };
 
 const isExternalFile = (href?: string) =>
@@ -102,15 +115,45 @@ export default function Header() {
 
   const renderTopLink = (item: MenuItem) => {
     const href = encodeHref(item.href);
+    const isPdf = isPdfFile(item.href);
+    const finalHref = isPdf ? convertToDownloadUrl(href) : href;
+    
+    if (!finalHref || finalHref === "#") {
+      return (
+        <span className="header__nav-link">
+          {item.label}
+        </span>
+      );
+    }
+    
     if (isExternalFile(item.href)) {
       return (
-        <a href={href} className="header__nav-link" target="_blank" rel="noopener noreferrer">
+        <a 
+          href={finalHref} 
+          className="header__nav-link" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          download={isPdf}
+        >
           {item.label}
         </a>
       );
     }
+    
+    if (isPdf) {
+      return (
+        <a 
+          href={finalHref} 
+          className="header__nav-link"
+          download
+        >
+          {item.label}
+        </a>
+      );
+    }
+    
     return (
-      <Link href={href} className="header__nav-link">
+      <Link href={finalHref} className="header__nav-link">
         {item.label}
       </Link>
     );
@@ -139,27 +182,56 @@ export default function Header() {
                     <ChevronDown style={{ width: 14, height: 14, marginLeft: 4 }} />
                   </button>
                   <div className="header__dropdown">
-                    {item.children.map((child, cIdx) =>
-                      isExternalFile(child.href) ? (
-                        <a
-                          key={cIdx}
-                          href={encodeHref(child.href)}
-                          className="header__dropdown-link"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {child.label}
-                        </a>
-                      ) : (
+                    {item.children.map((child, cIdx) => {
+                      const childHref = encodeHref(child.href);
+                      const isPdf = isPdfFile(child.href);
+                      const finalHref = isPdf ? convertToDownloadUrl(childHref) : childHref;
+                      
+                      if (!finalHref || finalHref === "#") {
+                        return (
+                          <span key={cIdx} className="header__dropdown-link">
+                            {child.label}
+                          </span>
+                        );
+                      }
+                      
+                      if (isPdf) {
+                        return (
+                          <a
+                            key={cIdx}
+                            href={finalHref}
+                            className="header__dropdown-link"
+                            download
+                          >
+                            {child.label}
+                          </a>
+                        );
+                      }
+                      
+                      if (isExternalFile(child.href)) {
+                        return (
+                          <a
+                            key={cIdx}
+                            href={finalHref}
+                            className="header__dropdown-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {child.label}
+                          </a>
+                        );
+                      }
+                      
+                      return (
                         <Link
                           key={cIdx}
-                          href={encodeHref(child.href)}
+                          href={finalHref}
                           className="header__dropdown-link"
                         >
                           {child.label}
                         </Link>
-                      ),
-                    )}
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
@@ -216,40 +288,96 @@ export default function Header() {
                   </button>
                   {isOpen && (
                     <div className="mobile-overlay__sublist">
-                      {item.children!.map((child, cIdx) =>
-                        isExternalFile(child.href) ? (
-                          <a
-                            key={cIdx}
-                            href={encodeHref(child.href)}
-                            className="mobile-overlay__sublink"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            {child.label}
-                          </a>
-                        ) : (
+                      {item.children!.map((child, cIdx) => {
+                        const childHref = encodeHref(child.href);
+                        const isPdf = isPdfFile(child.href);
+                        const finalHref = isPdf ? convertToDownloadUrl(childHref) : childHref;
+                        
+                        if (!finalHref || finalHref === "#") {
+                          return (
+                            <span
+                              key={cIdx}
+                              className="mobile-overlay__sublink"
+                            >
+                              {child.label}
+                            </span>
+                          );
+                        }
+                        
+                        if (isPdf) {
+                          return (
+                            <a
+                              key={cIdx}
+                              href={finalHref}
+                              className="mobile-overlay__sublink"
+                              download
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {child.label}
+                            </a>
+                          );
+                        }
+                        
+                        if (isExternalFile(child.href)) {
+                          return (
+                            <a
+                              key={cIdx}
+                              href={finalHref}
+                              className="mobile-overlay__sublink"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {child.label}
+                            </a>
+                          );
+                        }
+                        
+                        return (
                           <Link
                             key={cIdx}
-                            href={encodeHref(child.href)}
+                            href={finalHref}
                             className="mobile-overlay__sublink"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             {child.label}
                           </Link>
-                        ),
-                      )}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
               );
             }
+            const finalHref = encodeHref(item.href);
+            
+            if (!finalHref || finalHref === "#") {
+              return (
+                <span
+                  key={idx}
+                  className="mobile-overlay__link"
+                >
+                  {item.label}
+                </span>
+              );
+            }
+            
             return isExternalFile(item.href) ? (
               <a
                 key={idx}
-                href={encodeHref(item.href)}
+                href={finalHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="mobile-overlay__link"
+              >
+                {item.label}
+              </a>
+            ) : isPdfFile(item.href) ? (
+              <a
+                key={idx}
+                href={convertToDownloadUrl(finalHref)}
+                download
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="mobile-overlay__link"
               >
@@ -258,7 +386,7 @@ export default function Header() {
             ) : (
               <Link
                 key={idx}
-                href={encodeHref(item.href)}
+                href={finalHref}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="mobile-overlay__link"
               >

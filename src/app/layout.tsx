@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Work_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,10 +9,25 @@ const geistSans = Geist({
   subsets: ["latin", "cyrillic"],
 });
 
+const workSans = Work_Sans({
+  variable: "--font-work-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
-  title: "Новостройки в Ташкенте от Golden House — Искусство создавать!",
-  description:
-    "Golden House — Искусство создавать! Мы формируем облик столицы, создавая современные жилые комплексы. Новостройки в Ташкенте от Golden House.",
+  title: "YOSHLAR MARKAZI - Ёшлар ижтимоий-иқтисодий маркази",
+  description: "Yoshlar ijtimoiy-iqtisodiy markazi — yoshlarning ijtimoiy va iqtisodiy faolligini qo'llab-quvvatlash hamda investitsion loyihalarni rivojlantirish bo'yicha direksiya.",
+  icons: {
+    icon: "/gerb.jpeg",
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={geistSans.variable}>
+    <html lang="ru" className={`${geistSans.variable} ${workSans.variable} ${instrumentSerif.variable}`}>
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <Header />
         <main style={{ flex: 1 }}>{children}</main>

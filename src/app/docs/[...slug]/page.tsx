@@ -1,10 +1,9 @@
 import path from "path";
 import fs from "fs/promises";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Download, FileText, ArrowLeft } from "lucide-react";
 import mammoth from "mammoth";
-import PdfViewer from "@/components/PdfViewer";
 
 type Params = { slug: string[] };
 
@@ -22,8 +21,8 @@ const titleFromSlug = (segments: string[]) => {
   return last.replace(/\.[^.]+$/, "").replace(/\+$/, "").trim();
 };
 
-const fileUrlFromSegments = (segments: string[]) =>
-  "/" + ["Меню", ...segments].map(encodeURIComponent).join("/");
+const downloadUrlFromSegments = (segments: string[]) =>
+  "/api/download/" + segments.map(encodeURIComponent).join("/");
 
 async function loadDocx(filePath: string) {
   const result = await mammoth.convertToHtml(
@@ -69,7 +68,30 @@ export default async function DocViewerPage({
 
   const ext = path.extname(filePath).toLowerCase();
   const title = titleFromSlug(segments);
-  const fileUrl = fileUrlFromSegments(segments);
+  const downloadUrl = downloadUrlFromSegments(segments);
+
+  // For PDFs only: show a download button instead of a viewer.
+  if (ext === ".pdf") {
+    return (
+      <main className="doc-viewer" style={{ background: '#f5f7f6' }}>
+        <div className="doc-viewer__inner">
+          <div className="doc-viewer__header">
+            <Link href="/" className="doc-viewer__back">
+              <ArrowLeft size={16} /> Бош саҳифа
+            </Link>
+            <h1 className="doc-viewer__title">{title}</h1>
+          </div>
+          <div className="doc-viewer__fallback">
+            <FileText size={48} />
+            <p>PDF ҳужжатни кўриш учун уни юклаб олинг</p>
+            <a href={downloadUrl} className="doc-viewer__download">
+              <Download size={18} /> Юклаб олиш
+            </a>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   let body: React.ReactNode;
 
@@ -83,30 +105,13 @@ export default async function DocViewerPage({
         />
       );
     } catch {
-      body = (
-        <div className="doc-viewer__fallback">
-          <FileText size={48} />
-          <p>Ҳужжатни кўрсатиб бўлмади.</p>
-          <a href={fileUrl} className="doc-viewer__download" download>
-            <Download size={18} /> Юклаб олиш
-          </a>
-        </div>
-      );
+      redirect(downloadUrl);
     }
-  } else if (ext === ".pdf") {
-    body = <PdfViewer src={fileUrl} title={title} />;
   } else {
-    // .doc and others: provide download + try Google viewer
     body = (
       <div className="doc-viewer__fallback">
         <FileText size={48} />
-        <p>
-          Бу ҳужжат эски форматда (.doc). Уни юклаб олиш ва компьютерда очиш
-          тавсия этилади.
-        </p>
-        <a href={fileUrl} className="doc-viewer__download" download>
-          <Download size={18} /> Юклаб олиш
-        </a>
+        <p>Ҳужжатни кўрсатиб бўлмади.</p>
       </div>
     );
   }
@@ -119,9 +124,6 @@ export default async function DocViewerPage({
             <ArrowLeft size={16} /> Бош саҳифа
           </Link>
           <h1 className="doc-viewer__title">{title}</h1>
-          <a href={fileUrl} className="doc-viewer__download" download>
-            <Download size={16} /> Юклаб олиш
-          </a>
         </div>
         {body}
       </div>

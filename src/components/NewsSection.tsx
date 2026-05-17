@@ -1,61 +1,59 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Calendar } from "lucide-react";
-
-const newsItems = [
-  { id: 1, title: "Когда цветы — это только начало. Акция от Golden House", excerpt: "Специальное весеннее предложение для наших клиентов. Скидки до 15% на квартиры во всех жилых комплексах.", date: "15 марта 2025", category: "Акции", catBg: "#f43f5e", href: "/events/spring-promo", bg: "linear-gradient(135deg, #e11d48, #ec4899)" },
-  { id: 2, title: "С заботой о тех, кто защищает. Акция ко Дню защитников Родины", excerpt: "Особые условия покупки для военнослужащих и их семей. Ипотека под 12% годовых.", date: "14 января 2025", category: "Акции", catBg: "#10b981", href: "/events/defenders-day", bg: "linear-gradient(135deg, #059669, #14b8a6)" },
-  { id: 3, title: "GOLDEN FRIDAY с Golden House — момент, когда пора покупать", excerpt: "Только в эту пятницу! Беспрецедентные скидки на все типы квартир. Успейте забронировать.", date: "29 ноября 2024", category: "Акции", catBg: "#c8a855", href: "/events/golden-friday", bg: "linear-gradient(135deg, #d97706, #ea580c)" },
-  { id: 4, title: "Передача ключей дольщикам ЖК O'z Mahal", excerpt: "Во флагманском проекте Golden House состоялась торжественная передача ключей новым жильцам.", date: "20 октября 2024", category: "Новости", catBg: "#3b82f6", href: "/news/oz-mahal-keys", bg: "linear-gradient(135deg, #2563eb, #4f46e5)" },
-  { id: 5, title: "11.11 — Фестиваль недвижимости Golden House", excerpt: "Грандиозная распродажа недвижимости. Скидки, подарки и специальные условия ипотеки.", date: "11 ноября 2024", category: "Акции", catBg: "#a855f7", href: "/events/11-11-festival", bg: "linear-gradient(135deg, #9333ea, #7c3aed)" },
-  { id: 6, title: "Осенняя ярмарка недвижимости Golden House", excerpt: "Махаллада дув-дув гап! Приглашаем на осеннюю ярмарку с выгодными предложениями.", date: "5 октября 2024", category: "Новости", catBg: "#0ea5e9", href: "/news/autumn-fair", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-];
-
-type Tab = "all" | "events" | "news";
+import { ArrowUpRight, Calendar } from "lucide-react";
+import { getAllNews } from "@/data/newsData";
 
 export default function NewsSection() {
-  const [activeTab, setActiveTab] = useState<Tab>("all");
-  const filtered = activeTab === "all" ? newsItems : activeTab === "events" ? newsItems.filter((n) => n.category === "Акции") : newsItems.filter((n) => n.category === "Новости");
+  const newsItems = getAllNews();
 
   return (
-    <section className="section section--white">
-      <div className="section__inner">
-        <div className="section__header section__header--center">
-          <span className="section__label">Новости компании</span>
-          <h2 className="section__title">Новости и акции</h2>
-          <p className="section__subtitle section__subtitle--center">Будьте в курсе последних событий и специальных предложений</p>
+    <section className="bg-background py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center mb-12">
+          <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
+            So&apos;nggi yangiliklar
+          </p>
+          <h2 className="mt-3 font-serif text-4xl md:text-5xl">
+            Yangiliklar va tadbirlar
+          </h2>
         </div>
 
-        <div className="tabs">
-          {([{ key: "all", label: "Все" }, { key: "events", label: "Акции" }, { key: "news", label: "Новости" }] as { key: Tab; label: string }[]).map((tab) => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`tab ${activeTab === tab.key ? "tab--active" : "tab--inactive"}`}>
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="news-grid">
-          {filtered.map((item) => (
-            <Link key={item.id} href={item.href} className="news-card">
-              <div className="news-card__image" style={{ background: item.bg }}>
-                <div className="news-card__image-circles" />
-                <span className="news-card__category" style={{ background: item.catBg }}>{item.category}</span>
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {newsItems.slice(0, 3).map((item) => (
+            <Link
+              key={item.id}
+              href={`/news/${item.id}`}
+              className="group block"
+            >
+              <div className="overflow-hidden rounded-xl">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105"
+                />
               </div>
-              <div className="news-card__body">
-                <div className="news-card__date"><Calendar /> {item.date}</div>
-                <h3 className="news-card__title">{item.title}</h3>
-                <p className="news-card__excerpt">{item.excerpt}</p>
-                <div className="news-card__more">Читать далее <ArrowRight /></div>
+              <div className="mt-4 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
+                <span className="text-primary">{item.category}</span>
+                <span>·</span>
+                <span className="inline-flex items-center gap-1">
+                  <Calendar className="h-3 w-3" /> {item.date}
+                </span>
               </div>
+              <h3 className="mt-3 font-serif text-2xl leading-snug transition group-hover:text-primary">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                {item.excerpt}
+              </p>
             </Link>
           ))}
         </div>
 
-        <div style={{ textAlign: "center", marginTop: 48 }}>
-          <Link href="/news" className="btn-view-all btn-view-all--outline">
-            Смотреть все новости <ArrowRight />
+        <div className="mt-12 text-center">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-medium transition hover:border-primary hover:text-primary"
+          >
+            Barcha yangiliklar <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

@@ -1,17 +1,17 @@
+import Breadcrumb from "@/components/Breadcrumb";
 import HeroSection from "@/components/HeroSection";
-import ProjectShowcaseSection from "@/components/ProjectShowcaseSection";
 import VideoSection from "@/components/VideoSection";
-// import CallbackSection from "@/components/CallbackSection";
-// import TelegramSection from "@/components/TelegramSection";
+import ProjectShowcaseSection from "@/components/ProjectShowcaseSection";
+import NewsSection from "@/components/NewsSection";
 
 export default function Home() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Бош саҳифа" }]} />
       <HeroSection />
-      <ProjectShowcaseSection />
       <VideoSection />
-      {/* <CallbackSection /> */}
-      {/* <TelegramSection /> */}
+      <ProjectShowcaseSection />
+      <NewsSection />
     </>
   );
 }

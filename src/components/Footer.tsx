@@ -73,6 +73,13 @@ const encodeHref = (href: string) => {
   return href;
 };
 
+const isPdfFile = (href: string) => href.toLowerCase().endsWith(".pdf");
+
+const convertToDownloadUrl = (href: string) => {
+  if (!href.startsWith("/docs/")) return href;
+  return href.replace("/docs/", "/api/download/");
+};
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -102,26 +109,51 @@ export default function Footer() {
           <div key={section.title}>
             <h3 className="footer__heading">{section.title}</h3>
             <ul>
-              {section.links.map((link) => (
-                <li key={link.label}>
-                  {link.external ? (
-                    <a
-                      href={encodeHref(link.href)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="footer__link"
-                    >
-                      <span className="footer__link-dot" />
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link href={encodeHref(link.href)} className="footer__link">
+              {section.links.map((link) => {
+                const encodedHref = encodeHref(link.href);
+                const isPdf = isPdfFile(link.href);
+                const finalHref = isPdf ? convertToDownloadUrl(encodedHref) : encodedHref;
+                
+                if (isPdf) {
+                  return (
+                    <li key={link.label}>
+                      <a
+                        href={finalHref}
+                        download
+                        className="footer__link"
+                      >
+                        <span className="footer__link-dot" />
+                        {link.label}
+                      </a>
+                    </li>
+                  );
+                }
+                
+                if (link.external) {
+                  return (
+                    <li key={link.label}>
+                      <a
+                        href={finalHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="footer__link"
+                      >
+                        <span className="footer__link-dot" />
+                        {link.label}
+                      </a>
+                    </li>
+                  );
+                }
+                
+                return (
+                  <li key={link.label}>
+                    <Link href={finalHref} className="footer__link">
                       <span className="footer__link-dot" />
                       {link.label}
                     </Link>
-                  )}
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
