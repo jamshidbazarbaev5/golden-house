@@ -1,59 +1,72 @@
 import Link from "next/link";
-import { ArrowUpRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { getAllNews } from "@/data/newsData";
+
+const categoryColors: Record<string, string> = {
+  Madaniyat: "rgba(16,185,129,0.75)",
+  Tadbirkorlik: "rgba(200,168,85,0.85)",
+  "Ko'ngillilik": "rgba(59,130,246,0.8)",
+  "Ta'lim": "rgba(139,92,246,0.8)",
+};
 
 export default function NewsSection() {
   const newsItems = getAllNews();
 
   return (
-    <section className="bg-background py-20">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center mb-12">
-          <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
-            So&apos;nggi yangiliklar
-          </p>
-          <h2 className="mt-3 font-serif text-4xl md:text-5xl">
+    <section className="showcase">
+      <div className="showcase__inner">
+        <div className="showcase__header">
+          <span className="showcase__label">So&apos;nggi yangiliklar</span>
+          <h2 className="showcase__title showcase__title--center">
             Yangiliklar va tadbirlar
           </h2>
+          <p className="showcase__sub">
+            Eng muhim yangiliklar va rejalashtirilgan tadbirlar
+          </p>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="news-grid">
           {newsItems.slice(0, 3).map((item) => (
             <Link
               key={item.id}
               href={`/news/${item.id}`}
-              className="group block"
+              className="news-card"
             >
-              <div className="overflow-hidden rounded-xl">
+              <div className="news-card__image">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
-              </div>
-              <div className="mt-4 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
-                <span className="text-primary">{item.category}</span>
-                <span>·</span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="h-3 w-3" /> {item.date}
+                <div className="news-card__image-circles" />
+                <span
+                  className="news-card__category"
+                  style={{
+                    background:
+                      categoryColors[item.category] || "rgba(0,0,0,0.55)",
+                  }}
+                >
+                  {item.category}
                 </span>
               </div>
-              <h3 className="mt-3 font-serif text-2xl leading-snug transition group-hover:text-primary">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                {item.excerpt}
-              </p>
+              <div className="news-card__body">
+                <div className="news-card__date">
+                  <Calendar />
+                  {item.date}
+                </div>
+                <h3 className="news-card__title">{item.title}</h3>
+                <p className="news-card__excerpt">{item.excerpt}</p>
+                <span className="news-card__more">
+                  Batafsil <ArrowRight />
+                </span>
+              </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <Link
-            href="/news"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-medium transition hover:border-primary hover:text-primary"
-          >
-            Barcha yangiliklar <ArrowUpRight className="h-4 w-4" />
+        <div style={{ textAlign: "center" }}>
+          <Link href="/news" className="news-section__cta">
+            Barcha yangiliklar <ArrowRight />
           </Link>
         </div>
       </div>
