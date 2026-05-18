@@ -1,0 +1,216 @@
+/* ============================================
+   Leadership page — matches news page style
+   ============================================ */
+
+.ld-page {
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* ---------- Header ---------- */
+.ld-header {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 2.5rem;
+}
+.ld-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-muted-foreground);
+  margin: 0;
+}
+.ld-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  line-height: 1.05;
+  margin: 1rem 0 0;
+  letter-spacing: -0.01em;
+}
+.ld-title em {
+  font-style: italic;
+  color: var(--color-primary);
+}
+
+/* ---------- Section ---------- */
+.ld-section {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 6rem;
+}
+
+/* ---------- Shared label ---------- */
+.ld-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+}
+
+/* ---------- Featured (Director) ---------- */
+.ld-featured {
+  display: grid;
+  gap: 2rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 2.5rem;
+}
+@media (min-width: 768px) {
+  .ld-featured { grid-template-columns: 1fr 1.2fr; gap: 3rem; }
+}
+
+.ld-featured__img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  aspect-ratio: 4 / 5;
+}
+.ld-featured__img-wrap img {
+  transition: transform 0.7s ease;
+}
+.ld-featured:hover .ld-featured__img-wrap img {
+  transform: scale(1.03);
+}
+
+.ld-featured__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.ld-featured__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0.75rem 0 0;
+}
+.ld-featured__pos {
+  font-size: 1.125rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin: 0.375rem 0 0;
+}
+.ld-featured__bio {
+  margin: 1.25rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-muted-foreground);
+}
+
+.ld-featured__tasks {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ld-featured__tasks li {
+  position: relative;
+  padding-left: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-muted-foreground);
+}
+.ld-featured__tasks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.ld-featured__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* ---------- Contact link ---------- */
+.ld-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.ld-contact:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.ld-contact--sm {
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+}
+
+/* ---------- Grid (other leaders) ---------- */
+.ld-grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 5rem;
+}
+@media (min-width: 768px) {
+  .ld-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- Card ---------- */
+.ld-card {
+  border-top: 1px solid var(--color-border);
+  padding-top: 2rem;
+}
+.ld-card__img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  aspect-ratio: 4 / 3;
+}
+.ld-card__img-wrap img {
+  transition: transform 0.7s ease;
+}
+.ld-card:hover .ld-card__img-wrap img {
+  transform: scale(1.05);
+}
+
+.ld-card__meta {
+  margin-top: 1rem;
+}
+.ld-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0.5rem 0 0;
+  transition: color 0.2s ease;
+}
+.ld-card:hover .ld-card__name {
+  color: var(--color-primary);
+}
+.ld-card__pos {
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin: 0.25rem 0 0;
+}
+.ld-card__bio {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted-foreground);
+}
+.ld-card__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

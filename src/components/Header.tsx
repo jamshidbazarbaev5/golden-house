@@ -27,11 +27,11 @@ const menu: MenuItem[] = [
       },
       {
         label: "Раҳбарият",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Раҳбарият+/Раҳбарият.docx`,
+        href: "/leadership",
       },
       {
         label: "Ташкилот тузилмаси",
-        href: `${MENU_BASE}/1. Дирекция ҳақида+/Ташкилот тузилмаси+/ТУЗИЛМА.docx`,
+        href: "/structure",
       },
     ],
   },

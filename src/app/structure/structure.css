@@ -1,0 +1,273 @@
+/* ============================================
+   Structure page — org chart with connectors
+   ============================================ */
+
+/* --- line colour token --- */
+:root { --oc-line: var(--color-border); }
+
+.org {
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* ---------- Header ---------- */
+.org-header {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 2.5rem;
+}
+.org-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-muted-foreground);
+  margin: 0;
+}
+.org-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  line-height: 1.05;
+  margin: 1rem 0 0;
+  letter-spacing: -0.01em;
+}
+.org-heading em {
+  font-style: italic;
+  color: var(--color-primary);
+}
+
+/* ---------- Chart wrapper ---------- */
+.org-chart {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+}
+
+/* ---------- Levels ---------- */
+.oc-level {
+  display: flex;
+  justify-content: center;
+}
+.oc-level--children {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), 1fr);
+  gap: 0.25rem;
+  width: 100%;
+}
+
+/* ---------- Column (one child) ---------- */
+.oc-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Box (node) ---------- */
+.oc-box {
+  text-align: center;
+  padding: 1rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 90%;
+  min-width: 0;
+}
+.oc-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -15px rgba(0,0,0,0.15);
+}
+
+/* root (director) */
+.oc-box--root {
+  width: 18rem;
+  padding: 1.5rem 1.75rem;
+  border-color: var(--color-primary);
+  border-width: 2px;
+}
+.oc-box--root .oc-box__title--lg {
+  font-size: 1.75rem;
+}
+
+/* deputy */
+.oc-box--deputy {
+  border-color: var(--color-border);
+}
+
+/* dept */
+.oc-box--dept {
+  padding: 0.75rem 0.625rem;
+}
+
+/* direct dept — slightly different look */
+.oc-box--direct {
+  border-style: dashed;
+}
+
+/* tag / label */
+.oc-tag {
+  display: inline-block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+  margin-bottom: 0.375rem;
+}
+
+/* titles */
+.oc-box__title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.3;
+  margin: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.oc-box__title--lg { font-size: 1.5rem; }
+.oc-box__title--sm { font-size: 0.8125rem; }
+
+.oc-box__sub {
+  font-size: 0.8125rem;
+  color: var(--color-muted-foreground);
+  margin: 0.25rem 0 0;
+}
+.oc-box__staff {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-muted-foreground);
+  margin-top: 0.5rem;
+}
+
+/* ============================
+   CONNECTORS
+   ============================ */
+
+/* Vertical stem (centered) */
+.oc-stem {
+  width: 2px;
+  height: 2rem;
+  background: var(--oc-line);
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+.oc-stem--sm { height: 1.25rem; }
+
+/* Horizontal rail (full width of children grid) */
+.oc-rail {
+  height: 2px;
+  background: var(--oc-line);
+  width: 100%;
+  max-width: 80rem;
+  /* Trim the rail to span from first col center to last col center */
+  margin: 0 auto;
+  position: relative;
+}
+/* Overlay to trim edges: rail only between first & last column centers */
+.oc-rail::before,
+.oc-rail::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: calc(100% / 5 / 2);
+  height: 100%;
+  background: var(--color-background);
+}
+.oc-rail::before { left: 0; }
+.oc-rail::after { right: 0; }
+
+/* Vertical drop from rail into each column node */
+.oc-drop {
+  width: 2px;
+  height: 1.5rem;
+  background: var(--oc-line);
+  flex-shrink: 0;
+}
+.oc-drop--sm { height: 1rem; }
+
+/* Sub-rail inside a deputy column (for its child departments) */
+.oc-subrail {
+  height: 2px;
+  background: var(--oc-line);
+  width: 100%;
+  position: relative;
+}
+/* trim sub-rail edges */
+.oc-subrail::before,
+.oc-subrail::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: var(--color-background);
+}
+.oc-subrail::before { left: 0; width: calc(100% / var(--lcols, 3) / 2); }
+.oc-subrail::after { right: 0; width: calc(100% / var(--lcols, 3) / 2); }
+
+/* Leaves grid (departments under a deputy) */
+.oc-leaves {
+  display: grid;
+  grid-template-columns: repeat(var(--lcols, 3), 1fr);
+  gap: 0.25rem;
+  width: 100%;
+}
+.oc-leaf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================
+   RESPONSIVE — stack on mobile
+   ============================ */
+@media (max-width: 900px) {
+  .org-chart { align-items: stretch; }
+
+  /* Hide all graphical connectors */
+  .oc-stem,
+  .oc-rail,
+  .oc-drop,
+  .oc-subrail { display: none; }
+
+  /* Stack children vertically */
+  .oc-level--children {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .oc-col { align-items: stretch; }
+
+  .oc-box {
+    max-width: 100%;
+  }
+
+  /* Leaves stack vertically too */
+  .oc-leaves {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: 0.625rem;
+  }
+  .oc-leaf { align-items: stretch; }
+
+  /* Add left border to show hierarchy on mobile */
+  .oc-col {
+    border-left: 2px solid var(--color-border);
+    padding-left: 1rem;
+  }
+  .oc-leaf {
+    border-left: 2px solid var(--color-border);
+    padding-left: 0.75rem;
+  }
+}
