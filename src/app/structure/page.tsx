@@ -3,8 +3,8 @@ import "./structure.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Ташкилот тузилмаси — Ёшлар маркази",
-  description: "Ёшлар ижтимоий-иқтисодий маркази ташкилий тузилмаси.",
+  title: "Tashkilot tuzilmasi — Yoshlar markazi",
+  description: "Yoshlar ijtimoiy-iqtisodiy markazi tashkiliy tuzilmasi.",
 };
 
 interface Department {
@@ -12,46 +12,69 @@ interface Department {
   staff: number;
 }
 
-interface Deputy {
+interface Branch {
   title: string;
-  subtitle: string;
+  staff?: number;
   departments: Department[];
 }
 
-const deputies: Deputy[] = [
+const branches: Branch[] = [
   {
-    title: "Директор ўринбосари",
-    subtitle: "Лойиҳалар бўйича",
+    title: "Bosh muhandis",
     departments: [
-      { title: "Лойиҳалар бўлими", staff: 8 },
-      { title: "Инвестициялар бўлими", staff: 6 },
-      { title: "Ёшлар бўлими", staff: 10 },
+      {
+        title:
+          "Birlamchi ruxsat beruvchi, loyiha hujjatlari va tanlov hujjatlarini tayyorlash bo'limi",
+        staff: 2,
+      },
+      {
+        title:
+          "Loyihalarni boshqarish va qurilishni texnik kuzatish, shuningdek, respublika hududlaridagi texnik nazorat bo'yicha mutaxassislar bo'limi",
+        staff: 2,
+      },
     ],
   },
   {
-    title: "Директор ўринбосари",
-    subtitle: "Молия-иқтисод бўйича",
+    title: "Direktorning iqtisodiy masalalar bo'yicha o'rinbosari",
     departments: [
-      { title: "Молия-иқтисод бўлими", staff: 5 },
-      { title: "Бухгалтерия", staff: 4 },
-      { title: "Тендер бўлими", staff: 3 },
+      {
+        title: "Monitoring, marketing, manzilli dasturlarni tayyorlash bo'limi",
+        staff: 1,
+      },
+      {
+        title:
+          "Tanlov savdolarini tashkil etish, xo'jalik-shartnoma munosabatlari va investitsiya shartnomalari bo'limi",
+        staff: 1,
+      },
+      {
+        title:
+          "Xalqaro hamkorlik, Investitsiyalarni jalb qilish va rivojlantirish bo'limi",
+        staff: 1,
+      },
     ],
   },
-];
-
-const directDepts: Department[] = [
-  { title: "Кадрлар бўлими", staff: 4 },
-  { title: "Ҳуқуқий бўлим", staff: 3 },
-  { title: "АТ бўлими", staff: 5 },
+  {
+    title: "Buxgalteriya",
+    staff: 1,
+    departments: [
+      { title: "Bosh yuristkonsult", staff: 1 },
+      {
+        title: "Kadrlar va maxsus ishlar bo'yicha mutaxassis",
+        staff: 1,
+      },
+    ],
+  },
 ];
 
 export default function StructurePage() {
+  const cols = branches.length;
+
   return (
     <main className="org">
       <header className="org-header">
-        <p className="org-eyebrow">Дирекция ҳақида · Ташкилот тузилмаси</p>
+        <p className="org-eyebrow">Direksiya haqida · Tashkilot tuzilmasi</p>
         <h1 className="org-heading">
-          Ташкилий <em>тузилма</em>
+          Tashkiliy <em>tuzilma</em>
         </h1>
       </header>
 
@@ -59,71 +82,46 @@ export default function StructurePage() {
         {/* ── Level 0: Director ── */}
         <div className="oc-level">
           <div className="oc-box oc-box--root">
-            <span className="oc-tag">Раҳбар</span>
-            <h2 className="oc-box__title oc-box__title--lg">Директор</h2>
-            <p className="oc-box__sub">Ёшлар ижтимоий-иқтисодий маркази</p>
+            <span className="oc-tag">Rahbar</span>
+            <h2 className="oc-box__title oc-box__title--lg">Direktor</h2>
           </div>
         </div>
 
         {/* vertical stem from director */}
         <div className="oc-stem" />
 
-        {/* horizontal rail spanning all 5 columns */}
-        <div className="oc-rail" />
+        {/* horizontal rail spanning all columns */}
+        <div className="oc-rail" style={{ "--cols": cols } as React.CSSProperties} />
 
-        {/* ── Level 1: Deputies + Direct depts ── */}
-        <div className="oc-level oc-level--children" style={{ "--cols": 5 } as React.CSSProperties}>
-          {/* Deputy 1 */}
-          <div className="oc-col">
-            <div className="oc-drop" />
-            <div className="oc-box oc-box--deputy">
-              <span className="oc-tag">{deputies[0].subtitle}</span>
-              <h3 className="oc-box__title">{deputies[0].title}</h3>
-            </div>
-            <div className="oc-stem oc-stem--sm" />
-            <div className="oc-subrail" />
-            <div className="oc-leaves" style={{ "--lcols": deputies[0].departments.length } as React.CSSProperties}>
-              {deputies[0].departments.map((d, i) => (
-                <div key={i} className="oc-leaf">
-                  <div className="oc-drop oc-drop--sm" />
-                  <div className="oc-box oc-box--dept">
-                    <h4 className="oc-box__title oc-box__title--sm">{d.title}</h4>
-                    <span className="oc-box__staff"><Users size={11} /> {d.staff}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Deputy 2 */}
-          <div className="oc-col">
-            <div className="oc-drop" />
-            <div className="oc-box oc-box--deputy">
-              <span className="oc-tag">{deputies[1].subtitle}</span>
-              <h3 className="oc-box__title">{deputies[1].title}</h3>
-            </div>
-            <div className="oc-stem oc-stem--sm" />
-            <div className="oc-subrail" />
-            <div className="oc-leaves" style={{ "--lcols": deputies[1].departments.length } as React.CSSProperties}>
-              {deputies[1].departments.map((d, i) => (
-                <div key={i} className="oc-leaf">
-                  <div className="oc-drop oc-drop--sm" />
-                  <div className="oc-box oc-box--dept">
-                    <h4 className="oc-box__title oc-box__title--sm">{d.title}</h4>
-                    <span className="oc-box__staff"><Users size={11} /> {d.staff}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Direct departments */}
-          {directDepts.map((d, i) => (
-            <div key={i} className="oc-col">
+        {/* ── Level 1: Branches ── */}
+        <div
+          className="oc-level oc-level--children"
+          style={{ "--cols": cols } as React.CSSProperties}
+        >
+          {branches.map((branch, idx) => (
+            <div key={idx} className="oc-col">
               <div className="oc-drop" />
-              <div className="oc-box oc-box--dept oc-box--direct">
-                <h4 className="oc-box__title oc-box__title--sm">{d.title}</h4>
-                <span className="oc-box__staff"><Users size={11} /> {d.staff}</span>
+              <div className="oc-box oc-box--deputy">
+                <h3 className="oc-box__title">{branch.title}</h3>
+                {branch.staff !== undefined && (
+                  <span className="oc-box__staff">
+                    <Users size={11} /> {branch.staff}
+                  </span>
+                )}
+              </div>
+              <div className="oc-leaves">
+                {branch.departments.map((d, i) => (
+                  <div key={i} className="oc-leaf">
+                    <div className="oc-box oc-box--dept">
+                      <h4 className="oc-box__title oc-box__title--sm">
+                        {d.title}
+                      </h4>
+                      <span className="oc-box__staff">
+                        <Users size={11} /> {d.staff}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
