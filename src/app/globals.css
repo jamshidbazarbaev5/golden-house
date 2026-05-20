@@ -645,8 +645,8 @@ body {
   position: absolute;
   z-index: 10;
   transform: translate(-50%, -50%);
-  width: 28px;
-  height: 28px;
+  width: 15px;
+  height: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
