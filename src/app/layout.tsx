@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "YOSHLAR MARKAZI - Ёшлар ижтимоий-иқтисодий маркази",
   description: "Yoshlar ijtimoiy-iqtisodiy markazi — yoshlarning ijtimoiy va iqtisodiy faolligini qo'llab-quvvatlash hamda investitsion loyihalarni rivojlantirish bo'yicha direksiya.",
   icons: {
-    icon: "/gerb.jpeg",
+    icon: "/logo.jpg",
   },
 };
 
