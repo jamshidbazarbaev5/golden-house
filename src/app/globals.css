@@ -650,6 +650,71 @@ body {
   height: auto;
 }
 
+/* Summary bar */
+.hero-map__summary {
+  max-width: 1600px;
+  margin: 0 auto 20px;
+  padding: 0 24px;
+}
+.hero-map__summary-inner {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.hero-map__summary-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+.hero-map__summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+.hero-map__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.hero-map__chip:hover {
+  border-color: var(--chip-color, #009688);
+  color: var(--chip-color, #009688);
+}
+.hero-map__chip--active {
+  background: var(--chip-color, #009688);
+  border-color: var(--chip-color, #009688);
+  color: #fff;
+}
+.hero-map__chip--active .hero-map__chip-dot {
+  background: #fff !important;
+}
+.hero-map__chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* Pin (hotspot) */
 .hero-map__pin {
   position: absolute;
@@ -660,14 +725,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.hero-map__pin--dimmed {
+  opacity: 0.15;
   pointer-events: none;
 }
 .hero-map__pin-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(229, 57, 53, 0.0);
-  border: 2px solid rgba(229, 57, 53, 0);
+  background: color-mix(in srgb, var(--pin-color, #e53935) 15%, transparent);
+  border: 2px solid color-mix(in srgb, var(--pin-color, #e53935) 30%, transparent);
   transition: all 0.25s ease;
 }
 .hero-map__pin-number {
@@ -679,10 +750,10 @@ body {
   color: #fff;
 }
 .hero-map__pin--active .hero-map__pin-ring {
-  background: rgba(229, 57, 53, 0.85);
-  border-color: #e53935;
-  box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.25),
-              0 0 16px rgba(229, 57, 53, 0.5);
+  background: var(--pin-color, #e53935);
+  border-color: var(--pin-color, #e53935);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--pin-color, #e53935) 25%, transparent),
+              0 0 16px color-mix(in srgb, var(--pin-color, #e53935) 50%, transparent);
   animation: pin-pulse 1.2s ease-in-out infinite;
 }
 .hero-map__pin--active .hero-map__pin-number {
@@ -701,13 +772,15 @@ body {
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   z-index: 20;
+  text-align: center;
+  line-height: 1.4;
 }
 .hero-map__pin-tooltip::after {
   content: "";
@@ -726,6 +799,175 @@ body {
 @keyframes pin-pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
+}
+
+/* Detail overlay */
+.hero-map__detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.hero-map__detail {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  position: relative;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-map__detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hero-map__detail-close:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+.hero-map__detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.hero-map__detail-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+.hero-map__detail-id {
+  font-size: 14px;
+  font-weight: 700;
+  color: #9ca3af;
+}
+.hero-map__detail-title {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.3;
+}
+.hero-map__detail-meta {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.hero-map__detail-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Progress bar */
+.hero-map__detail-progress {
+  margin-bottom: 20px;
+}
+.hero-map__detail-progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.hero-map__detail-progress-bar {
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.hero-map__detail-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.hero-map__detail-progress-pct {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}
+
+/* Stages checklist */
+.hero-map__detail-stages {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+}
+.hero-map__detail-stages-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.hero-map__detail-stage-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.hero-map__detail-stage-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.hero-map__detail-stage-name {
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 500;
+  flex: 1;
+}
+.hero-map__detail-stage-row--done .hero-map__detail-stage-name {
+  color: #374151;
+  font-weight: 600;
+}
+.hero-map__detail-stage-row--current {
+  background: #f9fafb;
+  margin: 0 -8px;
+  padding: 8px 8px;
+  border-radius: 8px;
+}
+.hero-map__detail-stage-row--current .hero-map__detail-stage-name {
+  font-weight: 700;
+  color: #1a1a2e;
 }
 
 /* Legend */

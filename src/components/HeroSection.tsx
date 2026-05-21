@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
+import { X, MapPin, Layers, CheckCircle2 } from "lucide-react";
 
 interface Point {
   x: number;
@@ -12,8 +13,41 @@ interface LegendItem {
   id: number;
   label: string;
   stage: string;
-  points: Point[]; // multiple pin locations on the map
+  points: Point[];
 }
+
+const stageColors: Record<string, string> = {
+  "Лойиҳалаштириш":     "#8b5cf6",
+  "Ер ишлари":           "#f59e0b",
+  "Пойдевор":            "#3b82f6",
+  "Бетон ишлари":        "#06b6d4",
+  "Монтаж ишлари":       "#f97316",
+  "Қопламa ишлари":      "#ec4899",
+  "Кўкаламзорлаштириш":  "#10b981",
+  "Битказилган":         "#22c55e",
+};
+
+const stageOrder = [
+  "Лойиҳалаштириш",
+  "Ер ишлари",
+  "Пойдевор",
+  "Бетон ишлари",
+  "Монтаж ишлари",
+  "Қопламa ишлари",
+  "Кўкаламзорлаштириш",
+  "Битказилган",
+];
+
+const stageProgress: Record<string, number> = {
+  "Лойиҳалаштириш":     10,
+  "Ер ишлари":           25,
+  "Пойдевор":            40,
+  "Бетон ишлари":        55,
+  "Монтаж ишлари":       70,
+  "Қопламa ишлари":      85,
+  "Кўкаламзорлаштириш":  90,
+  "Битказилган":         100,
+};
 
 const legend: LegendItem[] = [
   { id: 1,  label: "Маъмурий марказ",                      stage: "Бетон ишлари",          points: [{ x: 48.6, y: 50 }] },
@@ -44,9 +78,40 @@ const legend: LegendItem[] = [
 
 export default function HeroSection() {
   const [activeId, setActiveId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [stageFilter, setStageFilter] = useState<string | null>(null);
+
+  const stageCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    legend.forEach((item) => {
+      counts[item.stage] = (counts[item.stage] || 0) + 1;
+    });
+    return counts;
+  }, []);
+
+  const filteredLegend = stageFilter
+    ? legend.filter((item) => item.stage === stageFilter)
+    : legend;
+
+  const selectedItem = selectedId ? legend.find((item) => item.id === selectedId) : null;
+  const highlightId = selectedId ?? activeId;
+
+  const handlePinClick = (id: number) => {
+    setSelectedId(selectedId === id ? null : id);
+  };
+
+  const completedStages = (stage: string) => {
+    const idx = stageOrder.indexOf(stage);
+    return stageOrder.slice(0, idx + 1);
+  };
 
   return (
     <section className="hero-map">
+      {/* Stage summary bar */}
+      <div className="hero-map__summary">
+       
+      </div>
+
       <div className="hero-map__layout">
         {/* Map */}
         <div className="hero-map__image-wrap">
@@ -62,19 +127,31 @@ export default function HeroSection() {
 
           {/* Pins overlaid on the image */}
           {legend.flatMap((item) =>
-            item.points.map((pt, idx) => (
-              <div
-                key={`${item.id}-${idx}`}
-                className={`hero-map__pin${activeId === item.id ? " hero-map__pin--active" : ""}`}
-                style={{ left: `${pt.x}%`, top: `${pt.y}%` }}
-                onMouseEnter={() => setActiveId(item.id)}
-                onMouseLeave={() => setActiveId(null)}
-              >
-                <span className="hero-map__pin-ring" />
-                <span className="hero-map__pin-number">{item.id}</span>
-                <span className="hero-map__pin-tooltip">{item.stage}</span>
-              </div>
-            ))
+            item.points.map((pt, idx) => {
+              const isVisible = !stageFilter || item.stage === stageFilter;
+              return (
+                <div
+                  key={`${item.id}-${idx}`}
+                  className={`hero-map__pin${highlightId === item.id ? " hero-map__pin--active" : ""}${!isVisible ? " hero-map__pin--dimmed" : ""}`}
+                  style={{
+                    left: `${pt.x}%`,
+                    top: `${pt.y}%`,
+                    "--pin-color": stageColors[item.stage] || "#e53935",
+                  } as React.CSSProperties}
+                  onMouseEnter={() => setActiveId(item.id)}
+                  onMouseLeave={() => setActiveId(null)}
+                  onClick={() => handlePinClick(item.id)}
+                >
+                  <span className="hero-map__pin-ring" />
+                  <span className="hero-map__pin-number">{item.id}</span>
+                  <span className="hero-map__pin-tooltip">
+                    {item.label}
+                    <br />
+                    <small style={{ opacity: 0.8 }}>{item.stage}</small>
+                  </span>
+                </div>
+              );
+            })
           )}
         </div>
 
@@ -82,23 +159,124 @@ export default function HeroSection() {
         <aside className="hero-map__legend">
           <div className="hero-map__legend-header">
             <h2 className="hero-map__legend-title">Бино ва иншоотлар қайдномаси</h2>
-            <p className="hero-map__legend-sub">Наведите на пункт, чтобы увидеть его на карте</p>
+            <p className="hero-map__legend-sub">
+              {stageFilter
+                ? `${stageFilter} — ${filteredLegend.length} объект`
+                : `Жами ${legend.length} объект · Босқични танланг`}
+            </p>
           </div>
           <ul className="hero-map__legend-list">
-            {legend.map((item) => (
+            {filteredLegend.map((item) => (
               <li
                 key={item.id}
-                className={`hero-map__legend-item${activeId === item.id ? " hero-map__legend-item--active" : ""}`}
+                className={`hero-map__legend-item${highlightId === item.id ? " hero-map__legend-item--active" : ""}`}
                 onMouseEnter={() => setActiveId(item.id)}
                 onMouseLeave={() => setActiveId(null)}
+                onClick={() => handlePinClick(item.id)}
               >
-                <span className="hero-map__legend-num">{item.id}</span>
+                <span
+                  className="hero-map__legend-num"
+                  style={{ background: stageColors[item.stage] }}
+                >
+                  {item.id}
+                </span>
                 <span className="hero-map__legend-label">{item.label}</span>
+                <span
+                  className="hero-map__legend-stage"
+                  style={{ background: stageColors[item.stage] }}
+                >
+                  {item.stage}
+                </span>
               </li>
             ))}
           </ul>
         </aside>
       </div>
+
+      {/* Detail panel (shown on click) */}
+      {selectedItem && (
+        <div className="hero-map__detail-overlay" onClick={() => setSelectedId(null)}>
+          <div className="hero-map__detail" onClick={(e) => e.stopPropagation()}>
+            <button className="hero-map__detail-close" onClick={() => setSelectedId(null)}>
+              <X style={{ width: 20, height: 20 }} />
+            </button>
+
+            <div className="hero-map__detail-header">
+              <span
+                className="hero-map__detail-badge"
+                style={{ background: stageColors[selectedItem.stage] }}
+              >
+                {selectedItem.stage}
+              </span>
+              <div className="hero-map__detail-id">#{selectedItem.id}</div>
+            </div>
+
+            <h3 className="hero-map__detail-title">{selectedItem.label}</h3>
+
+            <div className="hero-map__detail-meta">
+              <div className="hero-map__detail-meta-item">
+                <MapPin style={{ width: 14, height: 14 }} />
+                {selectedItem.points.length} жойлашув{selectedItem.points.length > 1 ? "лар" : ""}
+              </div>
+              <div className="hero-map__detail-meta-item">
+                <CheckCircle2 style={{ width: 14, height: 14 }} />
+                {stageProgress[selectedItem.stage]}% бажарилди
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="hero-map__detail-progress">
+              <div className="hero-map__detail-progress-label">Қурилиш жараёни</div>
+              <div className="hero-map__detail-progress-bar">
+                <div
+                  className="hero-map__detail-progress-fill"
+                  style={{
+                    width: `${stageProgress[selectedItem.stage]}%`,
+                    background: stageColors[selectedItem.stage],
+                  }}
+                />
+              </div>
+              <div className="hero-map__detail-progress-pct">
+                {stageProgress[selectedItem.stage]}%
+              </div>
+            </div>
+
+            {/* Stages checklist */}
+            <div className="hero-map__detail-stages">
+              <div className="hero-map__detail-stages-title">Босқичлар</div>
+              {stageOrder.map((stage) => {
+                const done = completedStages(selectedItem.stage).includes(stage);
+                const isCurrent = stage === selectedItem.stage;
+                return (
+                  <div
+                    key={stage}
+                    className={`hero-map__detail-stage-row${done ? " hero-map__detail-stage-row--done" : ""}${isCurrent ? " hero-map__detail-stage-row--current" : ""}`}
+                  >
+                    <span
+                      className="hero-map__detail-stage-dot"
+                      style={{
+                        background: done ? stageColors[stage] : "#d1d5db",
+                        boxShadow: isCurrent ? `0 0 0 3px ${stageColors[stage]}40` : "none",
+                      }}
+                    />
+                    <span className="hero-map__detail-stage-name">{stage}</span>
+                    {done && (
+                      <CheckCircle2
+                        style={{
+                          width: 14,
+                          height: 14,
+                          color: stageColors[stage],
+                          marginLeft: "auto",
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

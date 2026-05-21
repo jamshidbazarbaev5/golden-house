@@ -165,7 +165,7 @@ export default function Header() {
         <div className="header__inner">
           <Link href="/" className="header__logo">
             <div className="header__logo-icon header__logo-icon--img">
-              <Image src="/logo.jpg" alt="Yoshlar Markazi" width={40} height={40} style={{ width: "auto", height: "100%" }} />
+              <Image src="/logo.jpg" alt="Yoshlar Markazi" width={80} height={80} style={{ width: "auto", height: "100%" }} />
             </div>
             <div>
               <div className="header__logo-text">YOSHLAR MARKAZI</div>
